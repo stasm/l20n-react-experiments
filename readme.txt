@@ -1,5 +1,20 @@
 Here are my thoughts and rough notes on integrating L20n with React.
 
+tl;dr:
+
+  We need to decide at which moment we'd want to run the localization 
+logic, including the interpolation of external arguments into the 
+translated message (e.g. "Hello, { $name }").  We can either pass state 
+and props into L20n methods (or components), interpolate them and 
+return translated virtual DOM trees which React can then render as 
+needed.  Or, we can set data-l10n-id and data-l10n-args attributes on 
+components which React will render and then use them in L20n 
+indepenedently of React's render cycle.
+
+  
+Introduction
+============
+
 I spent some time learning React (and other popular frameworks), went 
 through a few tutorials and wrote some code.  One of the most helpful 
 experience was the meet.js Summit conference which I attended two weeks 
