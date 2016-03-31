@@ -55,12 +55,14 @@
 
   // shim translations for these two known data-l10n-ids
   var translations = {
-    'hello-world': 'Witaj <em>świecie</em>!',
+    'hello-world': 'Witaj <em>{$name}</em>!',
     'type-your-name': 'Wpisz <input placeholder="swoje imię"> i <button>wyślij</button>'
   };
 
-  function formatEntity(key) {
-    return Promise.resolve(translations[key]);
+  function formatEntity(key, args) {
+    return Promise.resolve(translations[key].replace('{$name}', function () {
+      return args.name;
+    }));
   }
 
   var TranslatedElement = function (_React$Component) {
@@ -81,12 +83,27 @@
     }
 
     babelHelpers.createClass(TranslatedElement, [{
+      key: 'shouldComponentUpdate',
+      value: function shouldComponentUpdate(newProps, newState) {
+        // XXX newState doesn't seem to bew all that new; updating doesn't work
+        return this.state.translation !== newState.translation;
+      }
+    }, {
       key: 'componentDidMount',
       value: function componentDidMount() {
         var _this2 = this;
 
-        return formatEntity(this.props.id).then(function (translation) {
+        return formatEntity(this.props.id, this.props).then(function (translation) {
           return _this2.setState({ translation: translation });
+        });
+      }
+    }, {
+      key: 'componentDidUpdate',
+      value: function componentDidUpdate() {
+        var _this3 = this;
+
+        return formatEntity(this.props.id, this.props).then(function (translation) {
+          return _this3.setState({ translation: translation });
         });
       }
     }, {
@@ -144,18 +161,40 @@
     babelHelpers.inherits(MyComponent, _React$Component);
 
     function MyComponent() {
+      var _Object$getPrototypeO;
+
+      var _temp, _this, _ret;
+
       babelHelpers.classCallCheck(this, MyComponent);
-      return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(MyComponent).apply(this, arguments));
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return _ret = (_temp = (_this = babelHelpers.possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(MyComponent)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.state = {
+        name: ''
+      }, _temp), babelHelpers.possibleConstructorReturn(_this, _ret);
     }
 
     babelHelpers.createClass(MyComponent, [{
-      key: "render",
+      key: 'handleChange',
+      value: function handleChange(event) {
+        this.setState({ name: event.target.value });
+      }
+    }, {
+      key: 'render',
       value: function render() {
+        var _this2 = this;
+
         return React.createElement(
-          "div",
+          'div',
           null,
-          React.createElement(TranslatedH1, { id: "hello-world" }),
-          React.createElement(TranslatedP, { id: "type-your-name" })
+          React.createElement(TranslatedH1, { id: 'hello-world', name: this.state.name }),
+          React.createElement(TranslatedP, { id: 'type-your-name' }),
+          React.createElement('hr', null),
+          React.createElement('input', { type: 'text', value: this.state.name, placeholder: '(debug)', onChange: function onChange(evt) {
+              return _this2.handleChange(evt);
+            } })
         );
       }
     }]);
