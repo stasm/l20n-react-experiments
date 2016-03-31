@@ -52,12 +52,28 @@ change, event listeners are preserved.  Here's an example:
       <button onclick="…">Send</button> your message <em>now</em>.
     </p>
 
+Translations accept arguments with external data which is passed by the 
+developer.  For instance, a translation "Hello, { $name }" can take 
+a "name" external argument and will format the whole message.  
+Importantly, these external arguments can also be used to configure 
+other parts of the translation, or to select a branch (e.g. in case of 
+plurals). 
+
+  complete = { $num ->
+    [0]     Pending…
+   *[other] { NUMBER($num, style: "percent") } complete
+    [1]     Done!
+
+This means that' it's important to feed these external arguments into 
+L20n and format them there, instead of having L20n output translations 
+with unresolved {…} expressions and resolve them in the consumer code.
+
 
 How React works
 ===============
 
 React structures the UI into components and the general consensus is 
-that you should be smart about separting your components into stateful 
+that you should be smart about separating your components into stateful 
 and stateless ones.  The former kind is for keeping the logic and the 
 latter is for keeping the presentation layer.  Other than the state, 
 you can pass so-called props to components to configure them (props can 
@@ -82,9 +98,13 @@ separation of concerns and let L20n do its thing independently of
 React.
 
 In the following examples I'll be using variations of the following 
-React code:
+React snippet:
 
   http://stasm.github.io/l20n-react-experiments/base/
+
+The source code can be found at:
+
+  https://github.com/stasm/l20n-react-experiments/
 
 
 1. L20n Components
@@ -97,14 +117,14 @@ messages.
     render() {
       return (
         <h1>
-          <Translation id="hello" name={this.props.name}/>
+          <Translation id="hello" name={this.props.name} />
         </h1>
       );
     }
 
-This allows us to seamlessly take advantage of the "component" metaphor 
-and pass developer-provided arguments as props/attributes and even put 
-children inside of the <Translation/>!
+This allows us to seamlessly take advantage of the "component" 
+abstraction and pass developer-provided arguments as props/attributes 
+and even put children inside of the <Translation/>!
 
 There is, however, a problem with this approach.  Components need to be 
 enclosed in an outer HTML element, e.g. a <span>, which would result in 
