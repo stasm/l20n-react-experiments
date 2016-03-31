@@ -9,9 +9,9 @@ class Name extends React.Component {
   render() {
     return (
       <div>
-        <h1>Hello, World!</h1>
+        <h1>Hello, {this.state.name}!</h1>
         <p>
-          Type <input type="text" value={this.state.name} placeholder="your name" onChange={this.handleChange}></input> and <button disabled={this.state.name.length === 0}>Submit</button>.
+          Type <input type="text" value={this.state.name} placeholder="your name" onChange={evt => this.handleChange(evt)}></input> and <button disabled={this.state.name.length === 0}>Submit</button>.
         </p>
       </div>
     );

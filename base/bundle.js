@@ -80,19 +80,25 @@
     }, {
       key: "render",
       value: function render() {
+        var _this2 = this;
+
         return React.createElement(
           "div",
           null,
           React.createElement(
             "h1",
             null,
-            "Hello, World!"
+            "Hello, ",
+            this.state.name,
+            "!"
           ),
           React.createElement(
             "p",
             null,
             "Type ",
-            React.createElement("input", { type: "text", value: this.state.name, placeholder: "your name", onChange: this.handleChange }),
+            React.createElement("input", { type: "text", value: this.state.name, placeholder: "your name", onChange: function onChange(evt) {
+                return _this2.handleChange(evt);
+              } }),
             " and ",
             React.createElement(
               "button",
