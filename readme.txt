@@ -53,7 +53,6 @@ change, event listeners are preserved.  Here's an example:
     </p>
 
 
-
 How React works
 ===============
 
@@ -81,6 +80,11 @@ There are multiple ways we could integrate L20n into React.  Some seem
 to be more idiomatic for React, while others enforce a stricter 
 separation of concerns and let L20n do its thing independently of 
 React.
+
+In the following examples I'll be using variantions of the following 
+React code:
+
+  http://stasm.github.io/l20n-react-experiments/base/
 
 
 1. L20n Components
@@ -123,6 +127,10 @@ Or even:
         <TranslatedH1 id="hello" name=… />
       );
     }
+
+An implementation of this approach (without overlays) lives at:
+
+  http://stasm.github.io/l20n-react-experiments/components/
 
 This approach extends quite well to attributes because we'd encapsulate 
 the logic of translating the <h1> together with the attributes inside 
@@ -178,11 +186,23 @@ and the componented is mounted, we retrieve the translations
 asynchronously and save the result to the component's state this 
 triggering a re-render.
 
+An implementation of this approach (without overlays) lives at:
+
+  http://stasm.github.io/l20n-react-experiments/mutable-state/
+
+
   B. Declare which ids will be needed to render the component.
 
      Here we're declaring which translation ids will be needed.  This 
-can be done with a static property stored on the component or by using 
+can be done with a property stored on the component or by using 
 data-l10n-ids in the render() method.  Declaring args this way is hard.
+
+Two implementations (one for a property and another one for 
+data-l10n-id)  of this approach (without overlays) live at:
+
+  http://stasm.github.io/l20n-react-experiments/declarative-property/
+  http://stasm.github.io/l20n-react-experiments/declarative-state/
+
 
   C. Use a global store à la Redux Provider. 
 
@@ -196,12 +216,21 @@ is globally available to all child components.
       document.getElementById("container")
     );
 
+An implementation of this approach (without overlays) lives at:
+
+  http://stasm.github.io/l20n-react-experiments/context/
+
+
 * * *
 
 Reading more about the context made me realize that even if we can 
 store the state (translations) in individual components (like in A. and 
 B.), we still probably want a central place to store the current 
-languagechosen by or negotiated on the user's behalf.  
+language chosen by or negotiated on the user's behalf.  In fact, all of 
+the above solutions would likely benefit from a central translation 
+store or "provider". I implemented an example at:
+
+  http://stasm.github.io/l20n-react-experiments/components-context/
 
 
 3. Virtual DOM manipulation
@@ -215,6 +244,8 @@ virtual DOM similar to how we do it with the regular DOM in L20n's HTML
 bindings and apply translation logic where needed.  We could even 
 re-implement the whole DOM overlay mechanism to operate on React's 
 virtual DOM.
+
+(No example here!)
 
 
 4. Real DOM manipulation via lifecycle methods
@@ -232,6 +263,10 @@ internal mutation observer (if it's not needed by other pieces of the
 UI, like web components with Shadow DOM) and only rely on React to 
 notify us about re-renders.
 
+An implementation lives at:
+
+  http://stasm.github.io/l20n-react-experiments/componentDidUpdate/
+
 
 5. Real DOM manipulation via mutation observer
 ----------------------------------------------
@@ -239,4 +274,9 @@ notify us about re-renders.
 Lastly, as it turns out, not chaning anything in L20n is also a viable 
 option for us to consider.  When a component with data-l10n-id is 
 rendered or re-rendered, l20n's mutation observer picks up the change 
-and translates the DOM node.
+and translates the DOM node.  This means that L20n is completely 
+separate from React.
+
+An implementation lives at:
+
+  http://stasm.github.io/l20n-react-experiments/mutation/
