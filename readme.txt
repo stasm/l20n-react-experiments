@@ -22,11 +22,11 @@ First, a brief reminder of how L20n currently works.
 The developer puts the information about the available languages and 
 links to resources in <head>.  As soon as it's ready, L20n starts the 
 language negotiation process using this information and subsequently 
-starts downloading the relevant resources in the user's most prefered 
+starts downloading the relevant resources in the user's most preferred 
 language.  Translations are only available via an async API.
 
 DOM nodes with localizable messages are marked up with data-l10n-id 
-attributes.  These attibutes are observed by L20n's mutation observer:  
+attributes.  These attributes are observed by L20n's mutation observer:  
 each time a new node with the attribute is inserted or the attribute 
 changes, L20n will retranslate the node in question.
 
@@ -110,7 +110,7 @@ The source code can be found at:
 1. L20n Components
 ------------------
 
-Since React uses components, an obviousl first try is to provide a set 
+Since React uses components, an obvious first try is to provide a set 
 of special-purpose components whose job is to display translated 
 messages.
 
@@ -127,7 +127,7 @@ abstraction and pass developer-provided arguments as props/attributes
 and even put children inside of the <Translation/>!
 
 There is, however, a problem with this approach.  Components need to 
-produce an elment tree.  We'd need to enclose the translation in an 
+produce an element tree.  We'd need to enclose the translation in an 
 outer HTML element, e.g. a <span>, which would result in needless 
 nesting of redundant elements.  One possible solution would be to do 
 something like this instead:
@@ -196,14 +196,14 @@ because then we can pass this.state as l10-args.
 The challenge with this approach is that we need a way to get the list 
 of translations that we'll use to populate the state.  Keep in mind 
 that the L20n API is async.  In order to make a sync request inside of 
-the {…} we need to first prepare the data store accordinly.  There are 
+the {…} we need to first prepare the data store accordingly.  There are 
 a few possible solutions here.
 
   A. Save translation ids as they're being requested.
 
      In this scenario we're collecting the translation ids requested 
 during the first render of the component.  When the render is complete 
-and the componented is mounted, we retrieve the translations 
+and the component is mounted, we retrieve the translations 
 asynchronously and save the result to the component's state this 
 triggering a re-render.  This feels rather hacky and I don't think it's 
 a well-written React code.
@@ -322,7 +322,7 @@ be formatted anew and inserted into the DOM.  I'll continue researching
 this topic.
 
 Judging from my initial explorations, I like the component abstraction 
-as presented in #1 although understandably this appoach would require 
+as presented in #1 although understandably this approach would require 
 a lot of changes in L20n.  Namely, we'd need a whole new React DOM 
 bindings.  I also like the <TranslationProvider /> idea as it 
 translates well into L20n's concept of lightweight per-view or 
