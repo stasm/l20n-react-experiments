@@ -1,7 +1,7 @@
 // shim translations for these two known data-l10n-ids
 const translations = {
   'hello-world': {
-    value: 'Witaj <em>świecie</em>!',
+    value: 'Witaj <em>{$name}</em>!',
     attrs: {
       title: 'This is L20n working with React!'
     }
@@ -12,6 +12,10 @@ const translations = {
   }
 };
 
-export function formatEntity(key) {
-  return Promise.resolve(translations[key]);
+export function formatEntity(key, args) {
+  return Promise.resolve(
+    Object.assign({}, translations[key], {
+      value: translations[key].value.replace('{$name}', () => args.name)
+    })
+  );
 }

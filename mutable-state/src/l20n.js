@@ -32,9 +32,11 @@ export function translate(Composed) {
       );
     }
     render() {
-      return (
-        <Composed {...this.props} l10n={x => this.l10n(x)} ref={c => this._root = c} />
-      );
+      const props = Object.assign({}, this.props, {
+        ref: c => this._root = c,
+        l10n: x => this.l10n(x),
+      });
+      return <Composed {...props} />;
     }
   }
 }

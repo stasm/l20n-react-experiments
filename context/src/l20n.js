@@ -43,7 +43,10 @@ export function translate(Composed) {
     };
 
     render() {
-      return <Composed {...this.props}  l10n={x => this.context.l10n(x) }/>;
+      const props = Object.assign(
+        {}, this.props, {l10n: x => this.context.l10n(x)}
+      );
+      return <Composed {...props} />;
     }
   }
 }

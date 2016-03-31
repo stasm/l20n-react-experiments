@@ -20,7 +20,8 @@ export function translate(Composed) {
       );
     }
     render() {
-      return <Composed {...this.props}  l10n={x => this.state[x]} />;
+      const props = Object.assign({}, this.props, {l10n: x => this.state[x]});
+      return <Composed {...props} />;
     }
   }
 }

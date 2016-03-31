@@ -42,20 +42,6 @@
     return obj;
   };
 
-  babelHelpers.extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
   babelHelpers.inherits = function (subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -128,9 +114,10 @@
         value: function render() {
           var _this3 = this;
 
-          return React.createElement(Composed, babelHelpers.extends({}, this.props, { l10n: function l10n(x) {
+          var props = Object.assign({}, this.props, { l10n: function l10n(x) {
               return _this3.state[x];
-            } }));
+            } });
+          return React.createElement(Composed, props);
         }
       }]);
       return _class2;

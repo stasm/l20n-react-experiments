@@ -27,20 +27,6 @@
     };
   }();
 
-  babelHelpers.extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
   babelHelpers.inherits = function (subClass, superClass) {
     if (typeof superClass !== "function" && superClass !== null) {
       throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -80,7 +66,7 @@
   // shim translations for these two known data-l10n-ids
   var translations = {
     'hello-world': {
-      value: 'Witaj <em>świecie</em>!',
+      value: 'Witaj <em>{$name}</em>!',
       attrs: {
         title: 'This is L20n working with React!'
       }
@@ -91,8 +77,12 @@
     }
   };
 
-  function formatEntity(key) {
-    return Promise.resolve(translations[key]);
+  function formatEntity(key, args) {
+    return Promise.resolve(Object.assign({}, translations[key], {
+      value: translations[key].value.replace('{$name}', function () {
+        return args.name;
+      })
+    }));
   }
 
   // match the opening angle bracket (<) in HTML tags, and HTML entities like
@@ -282,7 +272,7 @@
   // shim L20n's DOM translation API with the overlay mechanism
   function translateFragment(frag) {
     return [].concat(babelHelpers.toConsumableArray(frag.querySelectorAll('[data-l10n-id]'))).map(function (elem) {
-      return formatEntity(elem.getAttribute('data-l10n-id')).then(function (translation) {
+      return formatEntity(elem.getAttribute('data-l10n-id'), JSON.parse(elem.getAttribute('data-l10n-args'))).then(function (translation) {
         return overlayElement(elem, translation);
       });
     });
@@ -315,9 +305,10 @@
         value: function render() {
           var _this2 = this;
 
-          return React.createElement(Composed, babelHelpers.extends({}, this.props, { ref: function ref(c) {
+          var props = Object.assign({}, this.props, { ref: function ref(c) {
               return _this2._root = c;
-            } }));
+            } });
+          return React.createElement(Composed, props);
         }
       }]);
       return _class;
@@ -346,6 +337,11 @@
     }
 
     babelHelpers.createClass(Name, [{
+      key: "getArgs",
+      value: function getArgs() {
+        return JSON.stringify(this.state);
+      }
+    }, {
       key: "handleChange",
       value: function handleChange(evt) {
         this.setState({ name: evt.target.value });
@@ -358,7 +354,11 @@
         return React.createElement(
           "div",
           null,
-          React.createElement("h1", { "data-l10n-id": "hello-world" }),
+          React.createElement(
+            "h1",
+            { "data-l10n-id": "hello-world", "data-l10n-args": this.getArgs() },
+            "Hello, World!"
+          ),
           React.createElement(
             "p",
             { "data-l10n-id": "type-your-name" },

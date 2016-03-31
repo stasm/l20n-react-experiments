@@ -4,7 +4,10 @@ import { overlayElement } from './overlay';
 // shim L20n's DOM translation API with the overlay mechanism
 function translateFragment(frag) {
   return [...frag.querySelectorAll('[data-l10n-id]')].map(
-    elem => formatEntity(elem.getAttribute('data-l10n-id')).then(
+    elem => formatEntity(
+      elem.getAttribute('data-l10n-id'),
+      JSON.parse(elem.getAttribute('data-l10n-args'))
+    ).then(
       translation => overlayElement(elem, translation)
     )
   );
@@ -22,7 +25,8 @@ export function translate(Composed) {
       return translateFragment(root);
     }
     render() {
-      return <Composed {...this.props} ref={c => this._root = c} />;
+      const props = Object.assign({}, this.props, {ref: c => this._root = c});
+      return <Composed {...props} />;
     }
   }
 }
