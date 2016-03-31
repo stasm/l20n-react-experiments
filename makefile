@@ -2,18 +2,18 @@ export SHELL := /bin/bash
 export PATH  := node_modules/.bin:$(PATH)
 
 build:
-	rollup -c src/example/rollup.config.js
-	rollup -c src/components/rollup.config.js
-	rollup -c src/mutable-state/rollup.config.js
-	rollup -c src/declarative-state/rollup.config.js
-	rollup -c src/declarative-property/rollup.config.js
-	rollup -c src/context/rollup.config.js
-	rollup -c src/components-context/rollup.config.js
-	rollup -c src/componentDidUpdate/rollup.config.js
-	rollup -c src/mutation/rollup.config.js
+	rollup -c base/rollup.config.js
+	rollup -c components/rollup.config.js
+	rollup -c mutable-state/rollup.config.js
+	rollup -c declarative-state/rollup.config.js
+	rollup -c declarative-property/rollup.config.js
+	rollup -c context/rollup.config.js
+	rollup -c components-context/rollup.config.js
+	rollup -c componentDidUpdate/rollup.config.js
+	rollup -c mutation/rollup.config.js
 
 watch:
-	ls src/**/*.* | entr make build
+	ls **/*.{js,html} | entr make build
 
 clean:
-	rm -rf dist/**/*.js
+	rm -rf **/bundle.js
