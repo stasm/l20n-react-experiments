@@ -81,7 +81,7 @@ to be more idiomatic for React, while others enforce a stricter
 separation of concerns and let L20n do its thing independently of 
 React.
 
-In the following examples I'll be using variantions of the following 
+In the following examples I'll be using variations of the following 
 React code:
 
   http://stasm.github.io/l20n-react-experiments/base/
@@ -245,7 +245,7 @@ bindings and apply translation logic where needed.  We could even
 re-implement the whole DOM overlay mechanism to operate on React's 
 virtual DOM.
 
-(No example here!)
+(No example implementation here yet!)
 
 
 4. Real DOM manipulation via lifecycle methods
@@ -254,7 +254,9 @@ virtual DOM.
 What if we wanted to re-use more of the existing L20n code?  We could 
 apply translations to the true DOM when React renders it.  Two 
 lifecycle methods are perfect for this: componentDidMount() and 
-componentDidUpdate().
+componentDidUpdate().  I've been having some trouble getting the latter 
+to work with High Order Components but I think the general idea is 
+sound.
 
 In this scenario we keep most of the current L20n intact and only use 
 React as a mechanism to monitor changes to the DOM.  A mutation 
@@ -271,8 +273,8 @@ An implementation lives at:
 5. Real DOM manipulation via mutation observer
 ----------------------------------------------
 
-Lastly, as it turns out, not chaning anything in L20n is also a viable 
-option for us to consider.  When a component with data-l10n-id is 
+Lastly, as it turns out, not changing anything in L20n is also a viable 
+option for us to consider!  When a component with data-l10n-id is 
 rendered or re-rendered, l20n's mutation observer picks up the change 
 and translates the DOM node.  This means that L20n is completely 
 separate from React.
@@ -280,3 +282,12 @@ separate from React.
 An implementation lives at:
 
   http://stasm.github.io/l20n-react-experiments/mutation/
+
+
+
+Conclusions
+===========
+
+The above examples are still WIP.  I'd like to better understand how 
+changes to the state should be propagated to translations which need to 
+be formatted anew and inserted into the DOM.

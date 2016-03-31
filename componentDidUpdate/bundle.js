@@ -363,7 +363,7 @@
             "p",
             { "data-l10n-id": "type-your-name" },
             "Type ",
-            React.createElement("input", { type: "text", value: this.props.name, placeholder: "your name", onChange: function onChange(evt) {
+            React.createElement("input", { type: "text", value: this.state.name, placeholder: "your name", onChange: function onChange(evt) {
                 return _this2.handleChange(evt);
               } }),
             " and ",
