@@ -17,6 +17,8 @@ export class TranslationProvider extends React.Component {
     // translations
     const ids = Object.keys(translations);
     return Promise.all(
+      // XXX this is wrong; we need to also pass args which aren't know at this 
+      // point
       ids.map(formatEntity)
     ).then(
       translations => {

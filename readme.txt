@@ -1,4 +1,4 @@
-Here are my thoughts on integrating L20n with React.
+Here are my thoughts and rough notes on integrating L20n with React.
 
 I spent some time learning React (and other popular frameworks), went 
 through a few tutorials and wrote some code.  One of the most helpful 
@@ -126,10 +126,11 @@ This allows us to seamlessly take advantage of the "component"
 abstraction and pass developer-provided arguments as props/attributes 
 and even put children inside of the <Translation/>!
 
-There is, however, a problem with this approach.  Components need to be 
-enclosed in an outer HTML element, e.g. a <span>, which would result in 
-needless nesting of redundant elements.  One possible solution would be 
-to do something like this instead:
+There is, however, a problem with this approach.  Components need to 
+produce an elment tree.  We'd need to enclose the translation in an 
+outer HTML element, e.g. a <span>, which would result in needless 
+nesting of redundant elements.  One possible solution would be to do 
+something like this instead:
 
     render() {
       return (
@@ -148,7 +149,7 @@ Or even:
       );
     }
 
-An implementation of this approach (without overlays) lives at:
+An implementation of this approach (sine args and overlays) lives at:
 
   http://stasm.github.io/l20n-react-experiments/components/
 
@@ -204,9 +205,10 @@ a few possible solutions here.
 during the first render of the component.  When the render is complete 
 and the componented is mounted, we retrieve the translations 
 asynchronously and save the result to the component's state this 
-triggering a re-render.
+triggering a re-render.  This feels rather hacky and I don't think it's 
+a well-written React code.
 
-An implementation of this approach (without overlays) lives at:
+An implementation of this approach (sine args and overlays) lives at:
 
   http://stasm.github.io/l20n-react-experiments/mutable-state/
 
@@ -215,10 +217,15 @@ An implementation of this approach (without overlays) lives at:
 
      Here we're declaring which translation ids will be needed.  This 
 can be done with a property stored on the component or by using 
-data-l10n-ids in the render() method.  Declaring args this way is hard.
+data-l10n-ids in the render() method.  In case of a configurable 
+property, declaring args is hard because we don't have them up front.  
+This might be a show stopper for this approach. And if we use 
+data-l10n-ids and data-l10n-args, we need to walk the resulting DOM 
+tree anyways so perhaps another approach which also walks the tree 
+would be better.
 
 Two implementations (one for a property and another one for 
-data-l10n-id)  of this approach (without overlays) live at:
+data-l10n-id)  of this approach (sine args and overlays) live at:
 
   http://stasm.github.io/l20n-react-experiments/declarative-property/
   http://stasm.github.io/l20n-react-experiments/declarative-state/
@@ -227,7 +234,8 @@ data-l10n-id)  of this approach (without overlays) live at:
   C. Use a global store à la Redux Provider. 
 
      Lastly, we can use React's contexts to create a state store which 
-is globally available to all child components.
+is globally available to all child components.  Again, I'm still not 
+sure how to pass arguments into this store at the right time.
 
     ReactDOM.render(
       <TranslationProvider src="/path/to/{locale}/resource">
@@ -236,19 +244,19 @@ is globally available to all child components.
       document.getElementById("container")
     );
 
-An implementation of this approach (without overlays) lives at:
+An implementation of this approach (sine overlays) lives at:
 
   http://stasm.github.io/l20n-react-experiments/context/
 
 
 * * *
 
-Reading more about the context made me realize that even if we can 
-store the state (translations) in individual components (like in A. and 
-B.), we still probably want a central place to store the current 
-language chosen by or negotiated on the user's behalf.  In fact, all of 
-the above solutions would likely benefit from a central translation 
-store or "provider". I implemented an example at:
+Reading more about the context made me realize that even when we store 
+the state (translations) in individual components (like in A. and B.), 
+we still probably want a central place to store the current language 
+chosen by or negotiated on the user's behalf.  In fact, all of the 
+above solutions would likely benefit from a central translation store 
+or "provider". I implemented an example at:
 
   http://stasm.github.io/l20n-react-experiments/components-context/
 
@@ -310,4 +318,15 @@ Conclusions
 
 The above examples are still WIP.  I'd like to better understand how 
 changes to the state should be propagated to translations which need to 
-be formatted anew and inserted into the DOM.
+be formatted anew and inserted into the DOM.  I'll continue researching 
+this topic.
+
+Judging from my initial explorations, I like the component abstraction 
+as presented in #1 although understandably this appoach would require 
+a lot of changes in L20n.  Namely, we'd need a whole new React DOM 
+bindings.  I also like the <TranslationProvider /> idea as it 
+translates well into L20n's concept of lightweight per-view or 
+per-component contexts.  Lastly, option #5 is also interesting:  we 
+don't have to do anything really to support it and it might be a great 
+first step into testing L20n in real React applications and learning in 
+more detail what we can do to make this experience easier.

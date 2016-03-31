@@ -118,7 +118,10 @@
         // normally we'd fetch this.props.src and populate the state with
         // translations
         var ids = Object.keys(translations);
-        return Promise.all(ids.map(formatEntity)).then(function (translations) {
+        return Promise.all(
+        // XXX this is wrong; we need to also pass args which aren't know at this
+        // point
+        ids.map(formatEntity)).then(function (translations) {
           var state = translations.reduce(function (obj, cur, i) {
             return Object.assign({}, obj, babelHelpers.defineProperty({}, ids[i], cur));
           }, {});
