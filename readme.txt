@@ -330,3 +330,7 @@ per-component contexts.  Lastly, option #5 is also interesting:  we
 don't have to do anything really to support it and it might be a great 
 first step into testing L20n in real React applications and learning in 
 more detail what we can do to make this experience easier.
+
+Let's discus.
+
+—Staś
